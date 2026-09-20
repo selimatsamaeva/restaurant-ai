@@ -1,0 +1,1019 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Restaurant AI</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Montserrat:wght@400;500;600;700&display=swap"
+        rel="stylesheet"
+    >
+</head>
+
+<body>
+
+<div class="app">
+
+    <!-- DECORATION -->
+
+    <div class="moon-decoration"></div>
+    <div class="grain"></div>
+
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar">
+
+        <div class="brand">
+
+            <div class="brand-symbol">
+                ♰
+            </div>
+
+            <div>
+                <div class="brand-name">
+                    Restaurant
+                </div>
+
+                <div class="brand-subtitle">
+                    AI assistant
+                </div>
+            </div>
+
+        </div>
+
+
+        <div class="sidebar-line"></div>
+
+
+        <nav class="navigation">
+
+            <button
+                class="nav-item active"
+                onclick="showPage('dashboard', this)"
+            >
+                <span class="nav-icon">⌂</span>
+                <span>Главная</span>
+            </button>
+
+
+            <button
+                class="nav-item"
+                onclick="showPage('orders', this)"
+            >
+                <span class="nav-icon">♢</span>
+                <span>Заказы</span>
+            </button>
+
+
+            <button
+                class="nav-item"
+                onclick="showPage('kitchen', this)"
+            >
+                <span class="nav-icon"></span>
+                <span>Кухня</span>
+            </button>
+
+
+            <button
+                class="nav-item"
+                onclick="showPage('bar', this)"
+            >
+                <span class="nav-icon"></span>
+                <span>Бар</span>
+            </button>
+
+
+            <button
+                class="nav-item"
+                onclick="showPage('analytics', this)"
+            >
+                <span class="nav-icon">◈</span>
+                <span>Аналитика</span>
+            </button>
+
+
+            <button
+                class="nav-item"
+                onclick="showPage('prediction', this)"
+            >
+                <span class="nav-icon">✦</span>
+                <span>ML-прогноз</span>
+            </button>
+
+        </nav>
+
+
+        <div class="sidebar-bottom">
+
+            <div class="ai-status">
+
+                <div class="status-symbol">
+                    ✦
+                </div>
+
+                <div class="status-text">
+
+                    <strong>
+                        AI работает
+                    </strong>
+
+                    <span>
+                        Система готова
+                    </span>
+
+                </div>
+
+                <div class="online"></div>
+
+            </div>
+
+
+            <div class="sidebar-quote">
+                «Хороший сервис начинается<br>
+                с порядка на кухне»
+            </div>
+
+        </div>
+
+    </aside>
+
+
+    <!-- MAIN -->
+
+    <main class="main">
+
+
+        <!-- TOPBAR -->
+
+        <header class="topbar">
+
+            <div class="top-left">
+
+                <div class="eyebrow">
+                    RESTAURANT MANAGEMENT SYSTEM
+                </div>
+
+                <div
+                    class="date"
+                    id="currentDate"
+                ></div>
+
+            </div>
+
+
+            <div class="profile">
+
+                <button class="notification">
+                    ♡
+                </button>
+
+
+                <div class="avatar">
+                    R
+                </div>
+
+
+                <div class="profile-info">
+
+                    <strong>
+                        Администратор
+                    </strong>
+
+                    <span>
+                        Restaurant
+                    </span>
+
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <!-- DASHBOARD -->
+
+        <section
+            id="dashboard"
+            class="page active-page"
+        >
+
+            <div class="hero-heading">
+
+                <div>
+
+                    <div class="section-kicker">
+                        ДОБРО ПОЖАЛОВАТЬ
+                    </div>
+
+                    <h1>
+                        Панель управления
+                    </h1>
+
+                    <p>
+                        Всё самое важное о работе ресторана
+                    </p>
+
+                </div>
+
+
+                <button
+                    class="outline-button"
+                    onclick="loadDashboard()"
+                >
+                    <span>↻</span>
+                    Обновить
+                </button>
+
+            </div>
+
+
+            <!-- STATISTICS -->
+
+            <div class="stats-grid">
+
+
+                <div class="stat-card">
+
+                    <div class="stat-card-top">
+
+                        <span>
+                            ВСЕГО ЗАКАЗОВ
+                        </span>
+
+                        <div class="stat-symbol">
+                            ♢
+                        </div>
+
+                    </div>
+
+
+                    <div
+                        class="stat-number"
+                        id="totalOrders"
+                    >
+                        —
+                    </div>
+
+
+                    <div class="stat-caption">
+                        За всё время
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card accent-card">
+
+                    <div class="stat-card-top">
+
+                        <span>
+                            ВЫРУЧКА
+                        </span>
+
+                        <div class="stat-symbol">
+                            ₽
+                        </div>
+
+                    </div>
+
+
+                    <div class="stat-number money">
+
+                        <span id="revenue">
+                            —
+                        </span>
+
+                        <small>₽</small>
+
+                    </div>
+
+
+                    <div class="stat-caption">
+                        По всем заказам
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-card-top">
+
+                        <span>
+                            СРЕДНЕЕ ВРЕМЯ
+                        </span>
+
+                        <div class="stat-symbol">
+                            ◷
+                        </div>
+
+                    </div>
+
+
+                    <div class="stat-number">
+
+                        <span id="averageTime">
+                            —
+                        </span>
+
+                        <small>
+                            мин
+                        </small>
+
+                    </div>
+
+
+                    <div class="stat-caption">
+                        Приготовления
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-card-top">
+
+                        <span>
+                            АКТИВНЫЕ
+                        </span>
+
+                        <div class="stat-symbol">
+                            ♡
+                        </div>
+
+                    </div>
+
+
+                    <div
+                        class="stat-number"
+                        id="activeOrders"
+                    >
+                        —
+                    </div>
+
+
+                    <div class="stat-caption">
+                        Сейчас в работе
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- WORKLOAD + AI -->
+
+            <div class="dashboard-grid">
+
+
+                <div class="dark-card workload-card">
+
+                    <div class="card-title-row">
+
+                        <div>
+
+                            <div class="small-title">
+                                РАБОЧАЯ НАГРУЗКА
+                            </div>
+
+                            <h2>
+                                Состояние станций
+                            </h2>
+
+                        </div>
+
+                        <div class="ornament">
+                            ✦
+                        </div>
+
+                    </div>
+
+
+                    <div class="station">
+
+                        <div class="station-top">
+
+                            <div class="station-name">
+                                <span class="station-icon">
+                                    ♨
+                                </span>
+
+                                Кухня
+                            </div>
+
+                            <strong
+                                id="kitchenLoadText"
+                            >
+                                0%
+                            </strong>
+
+                        </div>
+
+
+                        <div class="bar">
+
+                            <div
+                                class="bar-fill kitchen-fill"
+                                id="kitchenProgress"
+                            ></div>
+
+                        </div>
+
+
+                        <div
+                            class="station-status"
+                            id="kitchenStatus"
+                        >
+                            Низкая
+                        </div>
+
+                    </div>
+
+
+                    <div class="station">
+
+                        <div class="station-top">
+
+                            <div class="station-name">
+                                <span class="station-icon">
+                                    ☕
+                                </span>
+
+                                Бар
+                            </div>
+
+                            <strong
+                                id="barLoadText"
+                            >
+                                0%
+                            </strong>
+
+                        </div>
+
+
+                        <div class="bar">
+
+                            <div
+                                class="bar-fill bar-fill-purple"
+                                id="barProgress"
+                            ></div>
+
+                        </div>
+
+
+                        <div
+                            class="station-status"
+                            id="barStatus"
+                        >
+                            Низкая
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="ai-feature-card">
+
+                    <div class="ai-stars">
+                        ✦
+                    </div>
+
+                    <div class="ai-circle">
+                        ☾
+                    </div>
+
+
+                    <div class="ai-feature-content">
+
+                        <div class="section-kicker light">
+                            ARTIFICIAL INTELLIGENCE
+                        </div>
+
+                        <h2>
+                            Умный прогноз
+                            <br>
+                            времени приготовления
+                        </h2>
+
+                        <p>
+                            Система анализирует историю заказов
+                            и помогает оценить время приготовления.
+                        </p>
+
+
+                        <button
+                            class="light-button"
+                            onclick="showPageByName('prediction')"
+                        >
+                            Открыть прогноз
+                            <span>→</span>
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- RECENT ORDERS -->
+
+            <div class="dark-card recent-card">
+
+                <div class="card-title-row">
+
+                    <div>
+
+                        <div class="small-title">
+                            ACTIVITY
+                        </div>
+
+                        <h2>
+                            Последние заказы
+                        </h2>
+
+                    </div>
+
+
+                    <button
+                        class="text-button"
+                        onclick="showPageByName('orders')"
+                    >
+                        Все заказы →
+                    </button>
+
+                </div>
+
+
+                <div
+                    id="recentOrders"
+                    class="orders-list"
+                ></div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ORDERS -->
+
+        <section
+            id="orders"
+            class="page"
+        >
+
+            <div class="hero-heading">
+
+                <div>
+
+                    <div class="section-kicker">
+                        MANAGEMENT
+                    </div>
+
+                    <h1>
+                        Заказы
+                    </h1>
+
+                    <p>
+                        Все заказы ресторана
+                    </p>
+
+                </div>
+
+
+                <button
+                    class="outline-button"
+                    onclick="loadOrders()"
+                >
+                    ↻ Обновить
+                </button>
+
+            </div>
+
+
+            <div class="dark-card">
+
+                <div
+                    id="allOrders"
+                    class="orders-list"
+                ></div>
+
+            </div>
+
+        </section>
+
+
+        <!-- KITCHEN -->
+
+        <section
+            id="kitchen"
+            class="page"
+        >
+
+            <div class="hero-heading">
+
+                <div>
+
+                    <div class="section-kicker">
+                        KITCHEN
+                    </div>
+
+                    <h1>
+                        Кухня ♨
+                    </h1>
+
+                    <p>
+                        Очередь заказов кухни
+                    </p>
+
+                </div>
+
+
+                <button
+                    class="outline-button"
+                    onclick="loadKitchen()"
+                >
+                    ↻ Обновить
+                </button>
+
+            </div>
+
+
+            <div
+                id="kitchenOrders"
+                class="order-grid"
+            ></div>
+
+        </section>
+
+
+        <!-- BAR -->
+
+        <section
+            id="bar"
+            class="page"
+        >
+
+            <div class="hero-heading">
+
+                <div>
+
+                    <div class="section-kicker">
+                        BAR
+                    </div>
+
+                    <h1>
+                        Бар ☕
+                    </h1>
+
+                    <p>
+                        Очередь заказов бара
+                    </p>
+
+                </div>
+
+
+                <button
+                    class="outline-button"
+                    onclick="loadBar()"
+                >
+                    ↻ Обновить
+                </button>
+
+            </div>
+
+
+            <div
+                id="barOrders"
+                class="order-grid"
+            ></div>
+
+        </section>
+
+
+        <!-- ANALYTICS -->
+
+        <section
+            id="analytics"
+            class="page"
+        >
+
+            <div class="hero-heading">
+
+                <div>
+
+                    <div class="section-kicker">
+                        ANALYTICS
+                    </div>
+
+                    <h1>
+                        Аналитика
+                    </h1>
+
+                    <p>
+                        Основные показатели ресторана
+                    </p>
+
+                </div>
+
+
+                <button
+                    class="outline-button"
+                    onclick="loadAnalytics()"
+                >
+                    ↻ Обновить
+                </button>
+
+            </div>
+
+
+            <div class="analytics-grid">
+
+
+                <div class="dark-card analytics-box">
+
+                    <span>
+                        ВСЕГО ЗАКАЗОВ
+                    </span>
+
+                    <strong id="analyticsTotal">
+                        —
+                    </strong>
+
+                    <small>
+                        за всё время
+                    </small>
+
+                </div>
+
+
+                <div class="dark-card analytics-box">
+
+                    <span>
+                        НОВЫЕ
+                    </span>
+
+                    <strong id="analyticsNew">
+                        —
+                    </strong>
+
+                    <small>
+                        ожидают обработки
+                    </small>
+
+                </div>
+
+
+                <div class="dark-card analytics-box">
+
+                    <span>
+                        ГОТОВЯТСЯ
+                    </span>
+
+                    <strong id="analyticsPreparing">
+                        —
+                    </strong>
+
+                    <small>
+                        сейчас
+                    </small>
+
+                </div>
+
+
+                <div class="dark-card analytics-box accent-box">
+
+                    <span>
+                        ВЫДАНО
+                    </span>
+
+                    <strong id="analyticsServed">
+                        —
+                    </strong>
+
+                    <small>
+                        завершённые
+                    </small>
+
+                </div>
+
+            </div>
+
+
+            <div class="dashboard-grid">
+
+
+                <div class="dark-card">
+
+                    <div class="card-title-row">
+
+                        <div>
+
+                            <div class="small-title">
+                                MENU
+                            </div>
+
+                            <h2>
+                                Популярные позиции
+                            </h2>
+
+                        </div>
+
+                    </div>
+
+
+                    <div
+                        id="popularItems"
+                        class="popular-list"
+                    ></div>
+
+                </div>
+
+
+                <div class="dark-card revenue-card">
+
+                    <div class="small-title">
+                        REVENUE
+                    </div>
+
+                    <h2>
+                        Общая выручка
+                    </h2>
+
+                    <div class="revenue-number">
+
+                        <span
+                            id="analyticsRevenue"
+                        >
+                            —
+                        </span>
+
+                        ₽
+
+                    </div>
+
+                    <div class="revenue-decoration">
+                        ✦
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ML -->
+
+        <section
+            id="prediction"
+            class="page"
+        >
+
+            <div class="hero-heading">
+
+                <div>
+
+                    <div class="section-kicker">
+                        MACHINE LEARNING
+                    </div>
+
+                    <h1>
+                        ML-прогноз ✦
+                    </h1>
+
+                    <p>
+                        Интеллектуальная оценка времени приготовления
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="prediction-layout">
+
+
+                <div class="ai-big-card">
+
+                    <div class="ai-big-symbol">
+                        ☾
+                    </div>
+
+                    <div class="section-kicker light">
+                        INTELLIGENT PREDICTION
+                    </div>
+
+                    <h2>
+                        Предскажем время
+                        <br>
+                        приготовления заказа
+                    </h2>
+
+                    <p>
+                        Модель машинного обучения анализирует
+                        количество позиций, кухню, бар и плановое
+                        время приготовления.
+                    </p>
+
+
+                    <div class="feature-list">
+
+                        <div>
+                            <span>✦</span>
+                            Количество позиций
+                        </div>
+
+                        <div>
+                            <span>✦</span>
+                            Нагрузка кухни
+                        </div>
+
+                        <div>
+                            <span>✦</span>
+                            Нагрузка бара
+                        </div>
+
+                        <div>
+                            <span>✦</span>
+                            Плановое время
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="dark-card prediction-form">
+
+                    <div class="small-title">
+                        FORECAST
+                    </div>
+
+                    <h2>
+                        Получить прогноз
+                    </h2>
+
+                    <p>
+                        Введите номер заказа
+                    </p>
+
+
+                    <label>
+                        ID заказа
+                    </label>
+
+
+                    <input
+                        id="predictionOrderId"
+                        type="number"
+                        placeholder="Например, 106"
+                    >
+
+
+                    <button
+                        class="primary-button"
+                        onclick="getPrediction()"
+                    >
+                        ✦ Рассчитать прогноз
+                    </button>
+
+
+                    <div
+                        id="predictionResult"
+                        class="prediction-result hidden"
+                    ></div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<div
+    id="toast"
+    class="toast"
+>
+    Готово ♡
+</div>
+
+
+<script src="app.js"></script>
+
+</body>
+</html>
