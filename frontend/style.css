@@ -2804,3 +2804,1511 @@ button {
     }
 
 }
+
+/* ==========================================================
+   AI ASSISTANT
+   ========================================================== */
+
+.ai-assistant-card {
+    margin-top: 24px;
+}
+
+.ai-recommendations {
+    display: grid;
+    gap: 10px;
+    margin-top: 18px;
+}
+
+.ai-rec-item {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+
+    padding: 14px 16px;
+
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+
+    background: rgba(255, 255, 255, 0.025);
+}
+
+.ai-rec-dot {
+    width: 8px;
+    height: 8px;
+
+    border-radius: 50%;
+
+    margin-top: 6px;
+
+    flex-shrink: 0;
+
+    background: #9b8f98;
+}
+
+.ai-rec-high {
+    border-color: rgba(217, 160, 176, 0.25);
+}
+
+.ai-rec-high .ai-rec-dot {
+    background: #d9a0b0;
+}
+
+.ai-rec-medium {
+    border-color: rgba(184, 165, 199, 0.2);
+}
+
+.ai-rec-medium .ai-rec-dot {
+    background: #b8a5c7;
+}
+
+.ai-rec-normal .ai-rec-dot {
+    background: #9b8f98;
+}
+
+.ai-rec-item strong {
+    display: block;
+
+    font-size: 12px;
+
+    letter-spacing: 0.03em;
+}
+
+.ai-rec-item p {
+    margin: 5px 0 0;
+
+    color: #a99da6;
+
+    font-size: 11px;
+
+    line-height: 1.55;
+}
+
+/* ==========================================================
+   GLOBAL FONT SIZE FIX
+   Увеличение текста во всём интерфейсе
+   ========================================================== */
+
+/* Основной текст сайта */
+body {
+    font-size: 15px;
+}
+
+/* Боковое меню */
+.sidebar {
+    font-size: 15px;
+}
+
+.sidebar a {
+    font-size: 15px;
+}
+
+/* Заголовки разделов */
+h1 {
+    font-size: 30px;
+}
+
+h2 {
+    font-size: 24px;
+}
+
+h3 {
+    font-size: 19px;
+}
+
+/* Обычные абзацы */
+p {
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+/* Названия карточек */
+.card-title {
+    font-size: 17px;
+}
+
+/* Маленькие заголовки */
+.small-title {
+    font-size: 13px !important;
+    letter-spacing: 0.08em;
+}
+
+/* Значения в статистике */
+.stat-value {
+    font-size: 30px;
+}
+
+/* Подписи статистики */
+.stat-label {
+    font-size: 13px;
+}
+
+/* Карточки */
+.dark-card {
+    font-size: 14px;
+}
+
+/* Таблицы */
+table {
+    font-size: 14px;
+}
+
+th {
+    font-size: 13px;
+}
+
+td {
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+/* Заказы */
+.order-item {
+    font-size: 14px;
+}
+
+.order-item strong {
+    font-size: 15px;
+}
+
+/* Статусы заказов */
+.status {
+    font-size: 13px;
+}
+
+/* Кнопки */
+button {
+    font-size: 14px;
+}
+
+/* Поля ввода */
+input,
+select,
+textarea {
+    font-size: 14px;
+}
+
+/* Навигация */
+.nav-item {
+    font-size: 15px;
+}
+
+/* AI-помощник */
+.ai-rec-item strong {
+    font-size: 15px;
+}
+
+.ai-rec-item p {
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.ai-assistant-card h2 {
+    font-size: 24px;
+}
+
+#aiSummary {
+    font-size: 14px !important;
+}
+
+/* Последние заказы */
+#recentOrders {
+    font-size: 14px;
+}
+
+/* Аналитика */
+#popularItems {
+    font-size: 14px;
+}
+
+/* Прогноз */
+#predictionResult {
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+/* Тексты загрузки / пустых блоков */
+.empty {
+    font-size: 14px !important;
+}
+
+/* Подписи загруженности кухни и бара */
+#kitchenLoadText,
+#barLoadText {
+    font-size: 16px;
+}
+
+/* Статусы кухни и бара */
+#kitchenStatus,
+#barStatus {
+    font-size: 14px;
+}
+/* ==========================================================
+   RESTAURANT SITUATION
+   ========================================================== */
+
+.situation-card {
+    margin-top: 24px;
+}
+
+.situation-content {
+    margin-top: 20px;
+}
+
+.situation-main {
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+
+    padding: 18px;
+
+    border-radius: 14px;
+
+    background: rgba(255, 255, 255, 0.025);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.situation-indicator {
+    font-size: 16px;
+    margin-top: 2px;
+}
+
+.situation-main strong {
+    display: block;
+
+    font-size: 16px;
+    line-height: 1.4;
+}
+
+.situation-main p {
+    margin: 7px 0 0;
+
+    color: #aaa0a8;
+
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.situation-metrics {
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, 1fr);
+
+    gap: 12px;
+
+    margin-top: 14px;
+}
+
+.situation-metric {
+    padding: 15px;
+
+    border-radius: 12px;
+
+    background: rgba(255, 255, 255, 0.025);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.situation-metric span {
+    display: block;
+
+    color: #9d939b;
+
+    font-size: 12px;
+
+    margin-bottom: 7px;
+}
+
+.situation-metric strong {
+    font-size: 20px;
+}
+
+/* ==========================================================
+   PREMIUM DASHBOARD ANIMATIONS
+   ========================================================== */
+
+/* Плавное появление основных карточек */
+
+.dark-card {
+    animation: premiumFadeUp 0.7s ease both;
+}
+
+.dark-card:nth-child(2) {
+    animation-delay: 0.08s;
+}
+
+.dark-card:nth-child(3) {
+    animation-delay: 0.16s;
+}
+
+.dark-card:nth-child(4) {
+    animation-delay: 0.24s;
+}
+
+@keyframes premiumFadeUp {
+
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+}
+
+
+/* ==========================================================
+   AI ASSISTANT — MOVING LIGHT
+   ========================================================== */
+
+.ai-assistant-card {
+    position: relative;
+    overflow: hidden;
+}
+
+
+/* тонкая движущаяся линия сверху */
+
+.ai-assistant-card::before {
+
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    left: -35%;
+
+    width: 35%;
+    height: 1px;
+
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(217, 160, 176, 0.8),
+        transparent
+    );
+
+    animation: aiLight 5s linear infinite;
+
+}
+
+
+@keyframes aiLight {
+
+    0% {
+        left: -35%;
+    }
+
+    100% {
+        left: 100%;
+    }
+
+}
+
+
+/* ==========================================================
+   AI DOT — SOFT PULSE
+   ========================================================== */
+
+.ai-rec-dot {
+
+    animation:
+        aiDotPulse 2.4s ease-in-out infinite;
+
+}
+
+
+@keyframes aiDotPulse {
+
+    0%,
+    100% {
+        opacity: 0.55;
+        transform: scale(0.9);
+    }
+
+    50% {
+        opacity: 1;
+        transform: scale(1.15);
+    }
+
+}
+
+
+/* ==========================================================
+   ORNAMENT
+   ========================================================== */
+
+.ornament {
+
+    animation:
+        ornamentFloat 4s ease-in-out infinite;
+
+}
+
+
+@keyframes ornamentFloat {
+
+    0%,
+    100% {
+        transform: translateY(0);
+        opacity: 0.65;
+    }
+
+    50% {
+        transform: translateY(-3px);
+        opacity: 1;
+    }
+
+}
+
+
+/* ==========================================================
+   STAT VALUES
+   ========================================================== */
+
+.stat-value {
+
+    animation:
+        numberAppear 0.8s ease both;
+
+}
+
+
+@keyframes numberAppear {
+
+    from {
+        opacity: 0;
+        transform: translateY(5px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+}
+
+
+/* ==========================================================
+   SITUATION CARD
+   ========================================================== */
+
+.situation-card {
+
+    position: relative;
+    overflow: hidden;
+
+}
+
+
+.situation-card::after {
+
+    content: "";
+
+    position: absolute;
+
+    width: 180px;
+    height: 180px;
+
+    right: -100px;
+    bottom: -100px;
+
+    border-radius: 50%;
+
+    border: 1px solid
+        rgba(255, 255, 255, 0.05);
+
+    animation:
+        situationOrb 8s ease-in-out infinite;
+
+}
+
+
+@keyframes situationOrb {
+
+    0%,
+    100% {
+        transform: scale(1);
+        opacity: 0.4;
+    }
+
+    50% {
+        transform: scale(1.18);
+        opacity: 0.8;
+    }
+
+}
+
+
+/* ==========================================================
+   SITUATION INDICATOR
+   ========================================================== */
+
+.situation-indicator {
+
+    animation:
+        situationPulse 2.8s ease-in-out infinite;
+
+}
+
+
+@keyframes situationPulse {
+
+    0%,
+    100% {
+        opacity: 0.55;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+}
+
+
+/* ==========================================================
+   WORKLOAD TEXT
+   ========================================================== */
+
+#kitchenLoadText,
+#barLoadText {
+
+    transition:
+        transform 0.4s ease,
+        opacity 0.4s ease;
+
+}
+
+
+/* ==========================================================
+   HOVER — CARDS
+   ========================================================== */
+
+.dark-card {
+
+    transition:
+        transform 0.3s ease,
+        border-color 0.3s ease;
+
+}
+
+
+.dark-card:hover {
+
+    transform: translateY(-2px);
+
+    border-color:
+        rgba(255, 255, 255, 0.12);
+
+}
+
+
+/* ==========================================================
+   AI RECOMMENDATIONS
+   ========================================================== */
+
+.ai-rec-item {
+
+    transition:
+        transform 0.25s ease,
+        background 0.25s ease,
+        border-color 0.25s ease;
+
+}
+
+
+.ai-rec-item:hover {
+
+    transform: translateX(3px);
+
+    background:
+        rgba(255, 255, 255, 0.045);
+
+}
+
+
+/* ==========================================================
+   REDUCED MOTION
+   ========================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+
+    }
+
+}
+/* ==========================================================
+   PREMIUM VISUAL LAYER
+   ========================================================== */
+
+/* ---------- общий фон ---------- */
+
+body {
+    position: relative;
+    overflow-x: hidden;
+}
+
+
+/* ---------- мягкие фоновые орбы ---------- */
+
+body::before,
+body::after {
+    content: "";
+    position: fixed;
+
+    width: 420px;
+    height: 420px;
+
+    border-radius: 50%;
+
+    pointer-events: none;
+
+    z-index: -1;
+
+    filter: blur(90px);
+
+    opacity: 0.06;
+}
+
+body::before {
+    top: -180px;
+    right: -120px;
+
+    background: #d9a0b0;
+
+    animation:
+        backgroundOrbOne 14s ease-in-out infinite;
+}
+
+body::after {
+    bottom: -220px;
+    left: -140px;
+
+    background: #b8a5c7;
+
+    animation:
+        backgroundOrbTwo 18s ease-in-out infinite;
+}
+
+
+@keyframes backgroundOrbOne {
+
+    0%,
+    100% {
+        transform: translate(0, 0) scale(1);
+    }
+
+    50% {
+        transform: translate(-50px, 40px) scale(1.12);
+    }
+
+}
+
+
+@keyframes backgroundOrbTwo {
+
+    0%,
+    100% {
+        transform: translate(0, 0) scale(1);
+    }
+
+    50% {
+        transform: translate(60px, -30px) scale(1.15);
+    }
+
+}
+
+
+/* ==========================================================
+   CARD GLASS HIGHLIGHT
+   ========================================================== */
+
+.dark-card {
+    position: relative;
+    overflow: hidden;
+}
+
+.dark-card::after {
+
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    left: -120%;
+
+    width: 70%;
+    height: 100%;
+
+    pointer-events: none;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(255,255,255,0.025),
+            transparent
+        );
+
+    transform: skewX(-18deg);
+
+    animation:
+        cardShine 9s ease-in-out infinite;
+
+}
+
+
+@keyframes cardShine {
+
+    0% {
+        left: -120%;
+    }
+
+    30%,
+    100% {
+        left: 150%;
+    }
+
+}
+
+
+/* ==========================================================
+   WORKLOAD BARS
+   ========================================================== */
+
+#kitchenLoadBar,
+#barLoadBar {
+
+    position: relative;
+
+    overflow: hidden;
+
+    transition:
+        width 1.2s cubic-bezier(
+            0.22,
+            1,
+            0.36,
+            1
+        );
+
+}
+
+
+#kitchenLoadBar::after,
+#barLoadBar::after {
+
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    left: -40%;
+
+    width: 40%;
+    height: 100%;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(255,255,255,0.22),
+            transparent
+        );
+
+    animation:
+        loadBarShine 3.5s linear infinite;
+
+}
+
+
+@keyframes loadBarShine {
+
+    0% {
+        left: -40%;
+    }
+
+    100% {
+        left: 140%;
+    }
+
+}
+
+
+/* ==========================================================
+   STATUS DOT
+   ========================================================== */
+
+.status-dot {
+
+    display: inline-block;
+
+    width: 7px;
+    height: 7px;
+
+    margin-right: 7px;
+
+    border-radius: 50%;
+
+    background: #b8a5c7;
+
+    box-shadow:
+        0 0 0 0
+        rgba(184,165,199,0.35);
+
+    animation:
+        statusPulse 2s infinite;
+
+}
+
+
+@keyframes statusPulse {
+
+    0% {
+        box-shadow:
+            0 0 0 0
+            rgba(184,165,199,0.35);
+    }
+
+    70% {
+        box-shadow:
+            0 0 0 8px
+            rgba(184,165,199,0);
+    }
+
+    100% {
+        box-shadow:
+            0 0 0 0
+            rgba(184,165,199,0);
+    }
+
+}
+
+
+/* ==========================================================
+   AI HEADER
+   ========================================================== */
+
+.ai-assistant-card .small-title {
+
+    position: relative;
+
+    display: inline-flex;
+
+    align-items: center;
+
+}
+
+
+.ai-assistant-card .small-title::before {
+
+    content: "";
+
+    width: 5px;
+    height: 5px;
+
+    margin-right: 8px;
+
+    border-radius: 50%;
+
+    background: #d9a0b0;
+
+    animation:
+        aiStatusPulse 2s ease-in-out infinite;
+
+}
+
+
+@keyframes aiStatusPulse {
+
+    0%,
+    100% {
+        opacity: 0.45;
+        transform: scale(0.85);
+    }
+
+    50% {
+        opacity: 1;
+        transform: scale(1.15);
+    }
+
+}
+
+
+/* ==========================================================
+   SITUATION METRICS
+   ========================================================== */
+
+.situation-metric {
+
+    position: relative;
+
+    overflow: hidden;
+
+    transition:
+        transform 0.3s ease,
+        border-color 0.3s ease,
+        background 0.3s ease;
+
+}
+
+
+.situation-metric:hover {
+
+    transform: translateY(-3px);
+
+    background:
+        rgba(255,255,255,0.035);
+
+    border-color:
+        rgba(255,255,255,0.13);
+
+}
+
+
+/* маленькая линия сверху */
+
+.situation-metric::before {
+
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    left: 0;
+
+    width: 28px;
+    height: 1px;
+
+    background:
+        rgba(217,160,176,0.65);
+
+    transition:
+        width 0.35s ease;
+
+}
+
+
+.situation-metric:hover::before {
+
+    width: 70px;
+
+}
+
+
+/* ==========================================================
+   ORDER ITEMS
+   ========================================================== */
+
+.order-item {
+
+    transition:
+        transform 0.25s ease,
+        padding-left 0.25s ease;
+
+}
+
+
+.order-item:hover {
+
+    transform: translateX(4px);
+
+}
+
+
+/* ==========================================================
+   TABLE ROWS
+   ========================================================== */
+
+tr {
+
+    transition:
+        background 0.2s ease;
+
+}
+
+
+tr:hover {
+
+    background:
+        rgba(255,255,255,0.025);
+
+}
+
+
+/* ==========================================================
+   BUTTONS
+   ========================================================== */
+
+button {
+
+    transition:
+        transform 0.2s ease,
+        opacity 0.2s ease,
+        background 0.2s ease;
+
+}
+
+
+button:hover {
+
+    transform: translateY(-1px);
+
+}
+
+
+button:active {
+
+    transform: translateY(0);
+
+}
+
+
+/* ==========================================================
+   PAGE TITLE
+   ========================================================== */
+
+h1 {
+
+    animation:
+        titleReveal 0.8s ease both;
+
+}
+
+
+@keyframes titleReveal {
+
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+        letter-spacing: 0.02em;
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+        letter-spacing: normal;
+    }
+
+}
+
+
+/* ==========================================================
+   EMPTY / LOADING
+   ========================================================== */
+
+.empty {
+
+    animation:
+        softAppear 0.5s ease both;
+
+}
+
+
+@keyframes softAppear {
+
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+
+}
+
+
+/* ==========================================================
+   REDUCED MOTION
+   ========================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+
+        animation-duration: 0.01ms !important;
+
+        animation-iteration-count: 1 !important;
+
+        transition-duration: 0.01ms !important;
+
+    }
+
+}
+
+.ai-assistant-card .ornament {
+
+    animation:
+        premiumSpark 5s ease-in-out infinite;
+
+}
+
+
+@keyframes premiumSpark {
+
+    0%,
+    100% {
+        transform:
+            translateY(0)
+            rotate(0deg);
+
+        opacity: 0.55;
+    }
+
+    25% {
+        transform:
+            translateY(-2px)
+            rotate(4deg);
+
+        opacity: 0.9;
+    }
+
+    50% {
+        transform:
+            translateY(0)
+            rotate(0deg);
+
+        opacity: 1;
+    }
+
+    75% {
+        transform:
+            translateY(2px)
+            rotate(-4deg);
+
+        opacity: 0.75;
+    }
+
+}
+/* ==========================================================
+   PREMIUM WORKLOAD INDICATORS
+   ========================================================== */
+
+.workload-card {
+    position: relative;
+    overflow: hidden;
+}
+
+.workload-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(217, 160, 176, 0.45),
+        transparent
+    );
+    opacity: 0.7;
+}
+
+.workload-progress {
+    position: relative;
+    width: 100%;
+    height: 7px;
+    margin-top: 14px;
+    border-radius: 999px;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.07);
+}
+
+.workload-progress-bar {
+    position: relative;
+    width: 0%;
+    height: 100%;
+    border-radius: inherit;
+    transition:
+        width 1.2s cubic-bezier(0.22, 1, 0.36, 1),
+        opacity 0.4s ease;
+}
+
+.workload-progress-bar::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -35%;
+    width: 35%;
+    height: 100%;
+
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.35),
+        transparent
+    );
+
+    animation: workloadShine 3s linear infinite;
+}
+
+@keyframes workloadShine {
+
+    0% {
+        left: -35%;
+    }
+
+    100% {
+        left: 135%;
+    }
+
+}
+
+.workload-value {
+    font-size: 28px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    transition:
+        transform 0.35s ease,
+        opacity 0.35s ease;
+}
+
+.workload-label {
+    margin-top: 4px;
+    color: #9d939b;
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.workload-status {
+    margin-top: 12px;
+    font-size: 13px;
+    color: #aaa0a8;
+}
+
+.workload-status-dot {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    margin-right: 7px;
+    border-radius: 50%;
+    background: #b8a5c7;
+    box-shadow:
+        0 0 0 0 rgba(184, 165, 199, 0.35);
+
+    animation: workloadStatusPulse 2.2s infinite;
+}
+
+@keyframes workloadStatusPulse {
+
+    0% {
+        box-shadow:
+            0 0 0 0 rgba(184, 165, 199, 0.35);
+    }
+
+    70% {
+        box-shadow:
+            0 0 0 7px rgba(184, 165, 199, 0);
+    }
+
+    100% {
+        box-shadow:
+            0 0 0 0 rgba(184, 165, 199, 0);
+    }
+
+}
+
+/* плавное появление изменения значения */
+
+#kitchenLoadText,
+#barLoadText {
+
+    transition:
+        transform 0.35s ease,
+        opacity 0.35s ease;
+
+}
+
+/* адаптация под телефон */
+
+@media (max-width: 900px) {
+
+    .situation-metrics {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+}
+
+@media (max-width: 600px) {
+
+    .situation-metrics {
+        grid-template-columns: 1fr;
+    }
+
+}
+/* ==========================================================
+   SIDEBAR ACTIVE ITEM
+   ========================================================== */
+
+.sidebar a,
+.nav-item {
+
+    position: relative;
+    transition:
+        color 0.25s ease,
+        transform 0.25s ease,
+        background 0.25s ease;
+
+}
+
+.sidebar a:hover,
+.nav-item:hover {
+
+    transform: translateX(3px);
+
+}
+
+.sidebar a.active::before,
+.nav-item.active::before {
+
+    content: "";
+
+    position: absolute;
+
+    left: -1px;
+    top: 50%;
+
+    width: 3px;
+    height: 18px;
+
+    border-radius: 999px;
+
+    background: #d9a0b0;
+
+    transform:
+        translateY(-50%);
+
+    box-shadow:
+        0 0 12px rgba(217, 160, 176, 0.35);
+
+}
+
+.sidebar a.active,
+.nav-item.active {
+
+    color: #ffffff;
+
+}
+/* ==========================================================
+   ORDER WAITING TIMER
+   ========================================================== */
+
+.order-waiting {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    margin-top: 8px;
+
+}
+
+.order-waiting-label {
+
+    color: #8f858e;
+
+    font-size: 11px;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.08em;
+
+}
+
+.order-waiting-time {
+
+    font-size: 13px;
+
+    font-weight: 600;
+
+    font-variant-numeric: tabular-nums;
+
+    color: #d9a0b0;
+
+    transition:
+        color 0.3s ease,
+        transform 0.3s ease;
+
+}
+
+.order-waiting-time:hover {
+
+    transform: scale(1.04);
+
+}
+/* ==========================================================
+   WAITING TIMER STATES
+   ========================================================== */
+
+.order-waiting-time.waiting-normal {
+
+    color: #b8a5c7;
+
+}
+
+.order-waiting-time.waiting-warning {
+
+    color: #d9a0b0;
+
+    text-shadow:
+        0 0 12px rgba(
+            217,
+            160,
+            176,
+            0.18
+        );
+
+}
+
+.order-waiting-time.waiting-danger {
+
+    color: #e6a7b8;
+
+    font-weight: 700;
+
+    text-shadow:
+        0 0 14px rgba(
+            230,
+            167,
+            184,
+            0.28
+        );
+
+    animation:
+        waitingDangerPulse
+        1.8s
+        ease-in-out
+        infinite;
+
+}
+
+@keyframes waitingDangerPulse {
+
+    0%,
+    100% {
+
+        opacity: 0.75;
+
+    }
+
+    50% {
+
+        opacity: 1;
+
+    }
+
+}

@@ -171,6 +171,7 @@ def get_orders():
             "id": order.id,
             "table_number": order.table_number,
             "created_at": order.created_at,
+            "finished_at": order.finished_at,
             "status": order.status,
             "items": items
         })
@@ -684,6 +685,8 @@ def generate_test_data():
             "message": "Меню пустое"
         }
 
+    # Удаляем только старые тестовые заказы.
+    # Реальные заказы пользователя НЕ удаляются.
     old_test_orders = db.query(models.Order).filter(
         models.Order.is_test == True
     ).all()
@@ -695,7 +698,11 @@ def generate_test_data():
 
     created_orders = []
 
-    for i in range(20):
+    # ==========================================================
+    # 1. ЗАВЕРШЁННЫЕ ТЕСТОВЫЕ ЗАКАЗЫ ДЛЯ ML И АНАЛИТИКИ
+    # ==========================================================
+
+    for i in range(24):
 
         menu_item_1 = menu_items[i % len(menu_items)]
         menu_item_2 = menu_items[(i + 1) % len(menu_items)]
@@ -708,7 +715,7 @@ def generate_test_data():
             + menu_item_2.prep_time * quantity_2
         )
 
-        delay = (i % 6) - 2
+        delay = (i % 7) - 2
 
         actual_minutes = max(
             planned_time + delay,
@@ -717,8 +724,9 @@ def generate_test_data():
 
         finished_at = datetime.now()
 
-        created_at = finished_at - timedelta(
-            minutes=actual_minutes
+        created_at = (
+            finished_at
+            - timedelta(minutes=actual_minutes)
         )
 
         order = models.Order(
@@ -752,11 +760,70 @@ def generate_test_data():
 
         created_orders.append(order.id)
 
+    # ==========================================================
+    # 2. АКТИВНЫЕ ЗАКАЗЫ ДЛЯ БАРА И КУХНИ
+    # ==========================================================
+
+    active_statuses = [
+        "Новый",
+        "Принят",
+        "Готовится",
+        "Новый",
+        "Принят",
+        "Готовится"
+    ]
+
+    for i in range(6):
+
+        menu_item_1 = menu_items[i % len(menu_items)]
+        menu_item_2 = menu_items[(i + 1) % len(menu_items)]
+
+        quantity_1 = (i % 2) + 1
+        quantity_2 = 1
+
+        created_at = (
+            datetime.now()
+            - timedelta(minutes=2 + i * 2)
+        )
+
+        order = models.Order(
+            table_number=((i + 1) % 10) + 1,
+            created_at=created_at.isoformat(),
+            status=active_statuses[i],
+            finished_at=None,
+            is_test=True
+        )
+
+        db.add(order)
+        db.commit()
+        db.refresh(order)
+
+        order_item_1 = models.OrderItem(
+            order_id=order.id,
+            menu_item_id=menu_item_1.id,
+            quantity=quantity_1
+        )
+
+        order_item_2 = models.OrderItem(
+            order_id=order.id,
+            menu_item_id=menu_item_2.id,
+            quantity=quantity_2
+        )
+
+        db.add(order_item_1)
+        db.add(order_item_2)
+
+        db.commit()
+
+        created_orders.append(order.id)
+
     db.close()
 
     return {
-        "message": "Тестовые данные созданы",
-        "orders_created": len(created_orders),
+        "message": "Тестовые данные успешно созданы",
+        "completed_orders_for_ml": 24,
+        "active_orders_for_bar_and_kitchen": 6,
+        "total_test_orders": len(created_orders),
         "order_ids": created_orders
     }
 
@@ -928,7 +995,25 @@ def predict_order_time(order_id: int):
         bar_items,
         planned_time
     )
-
+    
+    # Защита от нереалистичного прогноза.
+    # ML не должен выдавать тысячи минут
+    # для обычного ресторанного заказа.
+    max_prediction = max(
+    planned_time + 30,
+    planned_time * 2
+    )
+    prediction = max(
+        1,
+        min(
+            prediction,
+            max_prediction
+        )
+    )
+    prediction = round(
+        prediction,
+        2
+        )
     db.close()
 
     return {
@@ -938,4 +1023,375 @@ def predict_order_time(order_id: int):
         "bar_items": bar_items,
         "planned_time": planned_time,
         "predicted_minutes": prediction
+        }
+
+# ==========================================================
+# ИИ-ПОМОЩНИК / ИНТЕЛЛЕКТУАЛЬНЫЕ РЕКОМЕНДАЦИИ
+# ==========================================================
+
+@app.get("/ai/recommendations")
+def get_ai_recommendations():
+    db = SessionLocal()
+
+    # Получаем активные заказы
+    active_statuses = [
+        "Новый",
+        "Принят",
+        "Готовится"
+    ]
+
+    orders_db = db.query(models.Order).filter(
+        models.Order.status.in_(active_statuses)
+    ).all()
+
+    recommendations = []
+
+    kitchen_orders = []
+    bar_orders = []
+
+    # ------------------------------------------------------
+    # Анализируем активные заказы
+    # ------------------------------------------------------
+
+    for order in orders_db:
+
+        order_items = []
+
+        kitchen_items_count = 0
+        bar_items_count = 0
+        planned_time = 0
+        items_count = 0
+
+        for item in order.items:
+
+            quantity = item.quantity
+
+            items_count += quantity
+            planned_time += item.menu_item.prep_time * quantity
+
+            order_items.append({
+                "menu_item_id": item.menu_item_id,
+                "name": item.menu_item.name,
+                "quantity": quantity,
+                "station": item.menu_item.station,
+                "prep_time": item.menu_item.prep_time
+            })
+
+            if item.menu_item.station == "Кухня":
+                kitchen_items_count += quantity
+
+            if item.menu_item.station == "Бар":
+                bar_items_count += quantity
+
+        if not order_items:
+            continue
+
+        order_data = {
+            "id": order.id,
+            "created_at": order.created_at,
+            "items": order_items,
+            "items_count": items_count,
+            "planned_time": planned_time,
+            "kitchen_items": kitchen_items_count,
+            "bar_items": bar_items_count
+        }
+
+        # Рассчитываем приоритет
+        priority = calculate_priority(order_data)
+
+        order_data["priority"] = priority
+
+        # Определяем станцию
+        if kitchen_items_count > 0:
+            kitchen_orders.append(order_data)
+
+        if bar_items_count > 0:
+            bar_orders.append(order_data)
+
+    # ------------------------------------------------------
+    # Загружаем ML-модель
+    # ------------------------------------------------------
+
+    training_data = []
+
+    completed_orders = db.query(models.Order).filter(
+        models.Order.finished_at.isnot(None),
+        models.Order.is_test == True
+    ).all()
+
+    for order in completed_orders:
+
+        items_count = 0
+        kitchen_items = 0
+        bar_items = 0
+        planned_time = 0
+
+        for item in order.items:
+
+            quantity = item.quantity
+
+            items_count += quantity
+            planned_time += item.menu_item.prep_time * quantity
+
+            if item.menu_item.station == "Кухня":
+                kitchen_items += quantity
+
+            if item.menu_item.station == "Бар":
+                bar_items += quantity
+
+        if order.finished_at and order.created_at:
+
+            created = datetime.fromisoformat(order.created_at)
+            finished = datetime.fromisoformat(order.finished_at)
+
+            actual_time = (
+                finished - created
+            ).total_seconds() / 60
+
+            if 1 <= actual_time <= 120:
+                training_data.append({
+                "items_count": items_count,
+                "kitchen_items": kitchen_items,
+                "bar_items": bar_items,
+                "planned_time": planned_time,
+                "actual_time": actual_time
+                })
+
+    model = train_model(training_data)
+
+    # ------------------------------------------------------
+    # Анализ кухни
+    # ------------------------------------------------------
+
+    if kitchen_orders:
+
+        kitchen_orders.sort(
+            key=lambda order: order["priority"],
+            reverse=True
+        )
+
+        highest_priority = kitchen_orders[0]
+
+        recommendations.append({
+            "type": "kitchen",
+            "title": "Кухня",
+            "message": (
+                f"На кухне находится "
+                f"{len(kitchen_orders)} активных заказов. "
+                f"Заказ №{highest_priority['id']} "
+                f"имеет самый высокий приоритет."
+            ),
+            "priority": "high"
+        })
+
+    else:
+
+        recommendations.append({
+            "type": "kitchen",
+            "title": "Кухня",
+            "message": "Активных заказов на кухне нет.",
+            "priority": "normal"
+        })
+
+    # ------------------------------------------------------
+    # Анализ бара
+    # ------------------------------------------------------
+
+    if bar_orders:
+
+        bar_orders.sort(
+            key=lambda order: order["priority"],
+            reverse=True
+        )
+
+        highest_priority = bar_orders[0]
+
+        recommendations.append({
+            "type": "bar",
+            "title": "Бар",
+            "message": (
+                f"На баре находится "
+                f"{len(bar_orders)} активных заказов. "
+                f"Заказ №{highest_priority['id']} "
+                f"имеет самый высокий приоритет."
+            ),
+            "priority": "high"
+        })
+
+    else:
+
+        recommendations.append({
+            "type": "bar",
+            "title": "Бар",
+            "message": "Активных заказов на баре нет.",
+            "priority": "normal"
+        })
+
+    # ------------------------------------------------------
+    # Анализ ожидания
+    # ------------------------------------------------------
+
+    for order in orders_db:
+
+        waiting_minutes = (
+            datetime.now()
+            - datetime.fromisoformat(order.created_at)
+        ).total_seconds() / 60
+
+        if waiting_minutes >= 10:
+
+            recommendations.append({
+                "type": "delay",
+                "title": "Долгое ожидание",
+                "message": (
+                    f"Заказ №{order.id} ожидает "
+                    f"{round(waiting_minutes)} минут. "
+                    f"Рекомендуется обработать его в первую очередь."
+                ),
+                "priority": "high"
+            })
+
+    # ------------------------------------------------------
+    # ML-прогноз
+    # ------------------------------------------------------
+
+    if model:
+
+        for order in orders_db:
+
+            items_count = 0
+            kitchen_items = 0
+            bar_items = 0
+            planned_time = 0
+
+            for item in order.items:
+
+                quantity = item.quantity
+
+                items_count += quantity
+                planned_time += (
+                    item.menu_item.prep_time
+                    * quantity
+                )
+
+                if item.menu_item.station == "Кухня":
+                    kitchen_items += quantity
+
+                if item.menu_item.station == "Бар":
+                    bar_items += quantity
+
+            prediction = predict_time(
+                model,
+                items_count,
+                kitchen_items,
+                bar_items,
+                planned_time
+            )
+            prediction = max(
+                1,
+                min(prediction,120)
+            )
+
+            if prediction > planned_time * 1.3:
+
+                recommendations.append({
+                    "type": "prediction",
+                    "title": "ML-прогноз",
+                    "message": (
+                        f"Для заказа №{order.id} "
+                        f"модель прогнозирует около "
+                        f"{round(prediction)} минут приготовления "
+                        f"при плановом времени "
+                        f"{round(planned_time)} минут."
+                    ),
+                    "priority": "medium"
+                })
+
+    # ------------------------------------------------------
+    # Общая рекомендация
+    # ------------------------------------------------------
+
+    if not orders_db:
+
+        recommendations.append({
+            "type": "general",
+            "title": "Система",
+            "message": (
+                "Все текущие заказы обработаны. "
+                "Кухня и бар свободны."
+            ),
+            "priority": "normal"
+        })
+
+    else:
+
+        recommendations.append({
+            "type": "general",
+            "title": "Рекомендация системы",
+            "message": (
+                "Следует контролировать заказы "
+                "с высоким приоритетом и большим временем ожидания."
+            ),
+            "priority": "medium"
+        })
+
+    db.close()
+
+    return {
+        "assistant": "AI-помощник ресторана",
+        "active_orders": len(orders_db),
+        "kitchen_orders": len(kitchen_orders),
+        "bar_orders": len(bar_orders),
+        "recommendations": recommendations
+    }
+
+# ==========================================================
+# ОЧИСТКА СТАРЫХ АКТИВНЫХ ЗАКАЗОВ
+# ==========================================================
+
+@app.post("/analytics/cleanup-old-active-orders")
+def cleanup_old_active_orders():
+    db = SessionLocal()
+
+    active_statuses = [
+        "Новый",
+        "Принят",
+        "Готовится"
+    ]
+
+    orders_db = db.query(models.Order).filter(
+        models.Order.status.in_(active_statuses)
+    ).all()
+
+    updated_orders = []
+
+    for order in orders_db:
+
+        created_at = datetime.fromisoformat(order.created_at)
+
+        waiting_minutes = (
+            datetime.now() - created_at
+        ).total_seconds() / 60
+
+        # Если заказ старше 60 минут,
+        # считаем его старым и завершаем.
+        if waiting_minutes > 60:
+
+            order.status = "Выдан"
+
+            if order.finished_at is None:
+                order.finished_at = datetime.now().isoformat()
+
+            updated_orders.append({
+                "order_id": order.id,
+                "old_waiting_minutes": round(waiting_minutes, 2)
+            })
+
+    db.commit()
+    db.close()
+
+    return {
+        "message": "Старые активные заказы обработаны",
+        "updated_orders_count": len(updated_orders),
+        "updated_orders": updated_orders
     }

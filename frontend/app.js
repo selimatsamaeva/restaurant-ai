@@ -366,6 +366,11 @@ async function loadDashboard() {
         );
 
 
+        // AI-ПОМОЩНИК
+        loadAIRecommendations();
+        loadRestaurantSituation();
+
+
     } catch (error) {
 
         console.error(error);
@@ -649,6 +654,17 @@ function renderStationOrders(
                             class="order-card-id"
                         >
                             Заказ #${order.id}
+                        </div>
+                        <div class="order-waiting">
+                        <span class="order-waiting-label">
+                        Ожидание
+                        </span>
+                        <span
+                        class="order-waiting-time"
+                        data-created-at="${order.created_at}"
+                        >
+                        ${formatWaitingTime(order.created_at)}
+                        </span>
                         </div>
 
                         <div
@@ -1065,4 +1081,615 @@ document.addEventListener(
         loadDashboard();
 
     }
+);
+/* ==========================================================
+   AI ASSISTANT
+   ========================================================== */
+
+async function loadAIRecommendations() {
+
+    const container = document.getElementById(
+        "aiRecommendations"
+    );
+
+    const summary = document.getElementById(
+        "aiSummary"
+    );
+
+    if (!container) {
+        return;
+    }
+
+    try {
+
+        container.innerHTML = `
+            <div class="empty">
+                AI анализирует текущую ситуацию...
+            </div>
+        `;
+
+
+        const response = await fetch(
+            "/ai/recommendations"
+        );
+
+
+        if (!response.ok) {
+            throw new Error(
+                "Ошибка загрузки AI-рекомендаций"
+            );
+        }
+
+
+        const data = await response.json();
+
+
+        if (summary) {
+
+            summary.textContent =
+                `Активных заказов: ${data.active_orders} · ` +
+                `Кухня: ${data.kitchen_orders} · ` +
+                `Бар: ${data.bar_orders}`;
+
+        }
+
+
+        if (
+            !data.recommendations ||
+            data.recommendations.length === 0
+        ) {
+
+            container.innerHTML = `
+                <div class="empty">
+                    Сейчас система не выявила проблем.
+                </div>
+            `;
+
+            return;
+        }
+
+
+        /*
+         * Показываем максимум 6 рекомендаций,
+         * чтобы dashboard не становился огромным.
+         */
+
+        const recommendations =
+            data.recommendations.slice(0, 6);
+
+
+        container.innerHTML =
+            recommendations.map(
+                recommendation => {
+
+                    let priorityClass =
+                        "ai-rec-normal";
+
+
+                    if (
+                        recommendation.priority === "high"
+                    ) {
+
+                        priorityClass =
+                            "ai-rec-high";
+
+                    }
+
+
+                    if (
+                        recommendation.priority === "medium"
+                    ) {
+
+                        priorityClass =
+                            "ai-rec-medium";
+
+                    }
+
+
+                    return `
+                        <div
+                            class="ai-rec-item ${priorityClass}"
+                        >
+
+                            <div
+                                class="ai-rec-dot"
+                            ></div>
+
+                            <div>
+
+                                <strong>
+                                    ${recommendation.title}
+                                </strong>
+
+                                <p>
+                                    ${recommendation.message}
+                                </p>
+
+                            </div>
+
+                        </div>
+                    `;
+
+                }
+            ).join("");
+
+
+    } catch (error) {
+
+        console.error(
+            "AI recommendations error:",
+            error
+        );
+
+
+        container.innerHTML = `
+            <div class="empty">
+                Не удалось получить рекомендации AI.
+            </div>
+        `;
+
+        if (summary) {
+
+            summary.textContent =
+                "Сервис рекомендаций временно недоступен.";
+
+        }
+
+    }
+}
+
+async function loadRestaurantSituation() {
+
+    const container =
+        document.getElementById(
+            "restaurantSituation"
+        );
+
+    if (!container) {
+        return;
+    }
+
+    try {
+
+        const [
+            workload,
+            orders,
+            recommendations
+        ] = await Promise.all([
+
+            getData("/workload"),
+
+            getData("/orders"),
+
+            getData("/ai/recommendations")
+
+        ]);
+
+
+        const activeOrders =
+            orders.filter(
+                order =>
+                    ![
+                        "Готов",
+                        "Выдан"
+                    ].includes(
+                        order.status
+                    )
+            );
+
+
+        const kitchenLoad =
+            workload.kitchen.load_percent;
+
+        const barLoad =
+            workload.bar.load_percent;
+
+
+        const longWaitingOrders =
+            activeOrders.filter(order => {
+
+                const created =
+                    new Date(
+                        order.created_at
+                    );
+
+                const now =
+                    new Date();
+
+                const minutes =
+                    (
+                        now - created
+                    ) / 60000;
+
+                return minutes >= 10;
+
+            });
+
+
+        let situation =
+            "Рабочая нагрузка находится под контролем.";
+
+        let details =
+            "Активных заказов: " +
+            activeOrders.length;
+
+
+        if (
+            kitchenLoad >= 75
+        ) {
+
+            situation =
+                "Высокая нагрузка на кухню.";
+
+            details =
+                "Кухня загружена на " +
+                kitchenLoad +
+                "%. Рекомендуется контролировать заказы с высоким приоритетом.";
+
+        }
+        else if (
+            barLoad >= 75
+        ) {
+
+            situation =
+                "Высокая нагрузка на бар.";
+
+            details =
+                "Бар загружен на " +
+                barLoad +
+                "%. Следует контролировать очередь напитков.";
+
+        }
+        else if (
+            longWaitingOrders.length > 0
+        ) {
+
+            situation =
+                "Есть заказы с длительным ожиданием.";
+
+            details =
+                longWaitingOrders.length +
+                " заказ(а) ожидают более 10 минут.";
+
+        }
+        else if (
+            activeOrders.length === 0
+        ) {
+
+            situation =
+                "Активных заказов нет.";
+
+            details =
+                "Кухня и бар готовы принимать новые заказы.";
+
+        }
+
+
+        const topRecommendations =
+            recommendations.recommendations
+                ? recommendations.recommendations
+                    .slice(0, 2)
+                : [];
+
+
+        container.innerHTML = `
+
+            <div class="situation-main">
+
+                <div class="situation-indicator">
+                    ●
+                </div>
+
+                <div>
+
+                    <strong>
+                        ${situation}
+                    </strong>
+
+                    <p>
+                        ${details}
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="situation-metrics">
+
+                <div class="situation-metric">
+
+                    <span>
+                        Активные заказы
+                    </span>
+
+                    <strong>
+                        ${activeOrders.length}
+                    </strong>
+
+                </div>
+
+
+                <div class="situation-metric">
+
+                    <span>
+                        Кухня
+                    </span>
+
+                    <strong>
+                        ${kitchenLoad}%
+                    </strong>
+
+                </div>
+
+
+                <div class="situation-metric">
+
+                    <span>
+                        Бар
+                    </span>
+
+                    <strong>
+                        ${barLoad}%
+                    </strong>
+
+                </div>
+
+
+                <div class="situation-metric">
+
+                    <span>
+                        Ожидание >10 мин
+                    </span>
+
+                    <strong>
+                        ${longWaitingOrders.length}
+                    </strong>
+
+                </div>
+
+            </div>
+
+        `;
+
+    }
+    catch (error) {
+
+        console.error(
+            "Situation error:",
+            error
+        );
+
+        container.innerHTML = `
+
+            <div class="empty">
+                Не удалось определить состояние ресторана.
+            </div>
+
+        `;
+
+    }
+}
+
+// ==========================================================
+// PREMIUM NUMBER ANIMATION
+// ==========================================================
+
+function animateNumber(element, target) {
+
+    if (!element) {
+        return;
+    }
+
+    const numericTarget =
+        Number(target);
+
+    if (!Number.isFinite(numericTarget)) {
+        return;
+    }
+
+    const start =
+        Number(
+            element.dataset.currentValue || 0
+        );
+
+    const duration = 700;
+
+    const startTime =
+        performance.now();
+
+
+    function update(currentTime) {
+
+        const progress =
+            Math.min(
+                (currentTime - startTime)
+                / duration,
+                1
+            );
+
+
+        const eased =
+            1 -
+            Math.pow(
+                1 - progress,
+                3
+            );
+
+
+        const value =
+            start +
+            (
+                numericTarget - start
+            ) * eased;
+
+
+        element.textContent =
+            Math.round(value);
+
+
+        if (progress < 1) {
+
+            requestAnimationFrame(
+                update
+            );
+
+        }
+        else {
+
+            element.textContent =
+                numericTarget;
+
+            element.dataset.currentValue =
+                numericTarget;
+
+        }
+
+    }
+
+
+    requestAnimationFrame(
+        update
+    );
+}
+// ==========================================================
+// ORDER WAITING TIMER
+// ==========================================================
+
+function formatWaitingTime(createdAt) {
+
+    if (!createdAt) {
+        return "00:00";
+    }
+
+    const created =
+        new Date(createdAt);
+
+    const now =
+        new Date();
+
+    let seconds =
+        Math.floor(
+            (now - created) / 1000
+        );
+
+    if (seconds < 0) {
+        seconds = 0;
+    }
+
+    const minutes =
+        Math.floor(
+            seconds / 60
+        );
+
+    const remainingSeconds =
+        seconds % 60;
+
+    return (
+        String(minutes).padStart(2, "0") +
+        ":" +
+        String(remainingSeconds).padStart(2, "0")
+    );
+}
+
+
+// ==========================================================
+// UPDATE ALL WAITING TIMERS
+// ==========================================================
+
+function updateWaitingTimers() {
+
+    const timers =
+        document.querySelectorAll(
+            "[data-created-at]"
+        );
+
+    timers.forEach(timer => {
+
+        const createdAt =
+            timer.dataset.createdAt;
+
+        timer.textContent =
+            formatWaitingTime(
+                createdAt
+            );
+
+    });
+
+}
+
+// ==========================================================
+// WAITING TIMER STATUS
+// ==========================================================
+
+function updateWaitingTimerStatus() {
+
+    const timers =
+        document.querySelectorAll(
+            ".order-waiting-time"
+        );
+
+    timers.forEach(timer => {
+
+        const createdAt =
+            timer.dataset.createdAt;
+
+        if (!createdAt) {
+            return;
+        }
+
+        const created =
+            new Date(createdAt);
+
+        const now =
+            new Date();
+
+        const minutes =
+            (
+                now - created
+            ) / 60000;
+
+        timer.classList.remove(
+            "waiting-normal",
+            "waiting-warning",
+            "waiting-danger"
+        );
+
+        if (minutes >= 10) {
+
+            timer.classList.add(
+                "waiting-danger"
+            );
+
+        }
+        else if (minutes >= 5) {
+
+            timer.classList.add(
+                "waiting-warning"
+            );
+
+        }
+        else {
+
+            timer.classList.add(
+                "waiting-normal"
+            );
+
+        }
+
+    });
+
+}
+
+
+// обновляем каждую секунду
+
+setInterval(
+    updateWaitingTimers,
+    1000
+);
+
+setInterval(
+    updateWaitingTimerStatus,
+    1000
 );
